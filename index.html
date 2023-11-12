@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>Counter: <span>0</span></h1>
+    <script type="module">
+      import { stream, derive } from "./index.js";
+
+      const count = stream(1);
+      const count2 = stream(2);
+
+      const justOnce = stream(0);
+
+      derive(() =>
+        console.log(`${count.val} + ${count2.val} = ${count.val + count2.val}`)
+      );
+
+      //   derive(() => (document.querySelector("span").textContent = count.val));
+      //   derive(() =>
+      //     console.log(
+      //       "JustOnce: I should run just twice, on init and when justOnce changes " +
+      //         justOnce.val
+      //     )
+      //   );
+      //   derive(() => console.log("Run when count2 changes: " + count2.val));
+      //   derive(() =>
+      //     console.log(
+      //       "Run when count or count2 changes but NOT justOnce: " +
+      //         `Count: ${count.val}, count2: ${count2.val} :${
+      //           count.val + count2.val
+      //         }`
+      //     )
+      //   );
+
+      setTimeout(() => {
+        // count.val++;
+        count.val++;
+      }, 1000);
+      setTimeout(() => {
+        // count.val++;
+        count2.val++;
+      }, 2000);
+      setTimeout(() => {
+        // count.val++;
+        console.log("JustOnce changed but derive doesn't update yay");
+        justOnce.val++;
+      }, 3000);
+      //   count2.val++;
+      //   justOnce.val++;
+      //   setInterval(() => {
+      //     count.val++;
+      //     // console.log(computed.val);
+      //   }, 1000);
+    </script>
+  </body>
+</html>
