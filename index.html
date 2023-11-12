@@ -14,10 +14,14 @@
       const count2 = stream(2);
 
       const justOnce = stream(0);
+      const user = stream({
+        username: "al",
+      });
 
-      derive(() =>
-        console.log(`${count.val} + ${count2.val} = ${count.val + count2.val}`)
-      );
+      //   derive(() =>
+      //     console.log(`${count.val} + ${count2.val} = ${count.val + count2.val}`)
+      //   );
+      derive(() => console.log(user.username));
 
       //   derive(() => (document.querySelector("span").textContent = count.val));
       //   derive(() =>
@@ -39,6 +43,7 @@
       setTimeout(() => {
         // count.val++;
         count.val++;
+        user.username = "alvaro";
       }, 1000);
       setTimeout(() => {
         // count.val++;
