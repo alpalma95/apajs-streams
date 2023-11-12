@@ -45,7 +45,7 @@ This is still in progress, but so far capabilities include:
 
 ## Upcoming
 
-- [] Computed values
-- [] Cleanup unused effects
-- [] Tests implementation
-- [] Type definitions
+- [ ] Computed values
+- [ ] Cleanup unused effects
+- [ ] Tests implementation
+- [ ] Type definitions
