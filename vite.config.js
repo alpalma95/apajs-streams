@@ -8,7 +8,7 @@ export default defineConfig({
     lib: {
       entry: "src/index.js",
       name: "@apajs/streams",
-      fileName: (format) => `streams.${format}.js`,
+      fileName: (format) => `apa-streams.${format}.js`,
     },
   },
 });

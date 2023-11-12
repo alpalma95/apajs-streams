@@ -3,12 +3,19 @@
   "version": "0.0.1",
   "description": "Minimalistic and lightweight reactive objects",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "test"
+    "dev": "vite",
+    "build": "vite build && node minify.js && gzip -c dist/apa-streams.es.min.js > dist/apa-streams.es.min.gz && cp ./src/main.d.ts ./dist/apa-streams.es.d.ts && cp ./src/main.d.ts ./dist/apa-streams.es.min.d.ts",
+    "preview": "vite preview"
   },
   "keywords": [
     "reactivity"
   ],
   "author": "Álvaro Palma",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "terser": "^5.24.0",
+    "vite": "^4.5.0"
+  }
 }
