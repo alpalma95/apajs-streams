@@ -55,8 +55,10 @@ export let stream = (initialVal) => {
       return Reflect.get(target, value, receiver);
     },
     set(target, value, nv, receiver) {
-      Reflect.set(target, value, nv, receiver);
-      trigger(target, value);
+      if (target[value] !== nv) {
+        Reflect.set(target, value, nv, receiver);
+        trigger(target, value);
+      }
       return true;
     },
   });
