@@ -37,7 +37,7 @@ This is still in progress, but so far capabilities include:
     email: "jondoe@testmail.com",
   });
 
-  derive(() => console.log(count.val));
+  derive(() => console.log(user.username));
   // Prints 'Jon'
   user.username = "Jane";
   // Automatically prints 'Jane'
