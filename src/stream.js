@@ -7,7 +7,6 @@ export let derive = (cb) => {
   active = null;
 };
 let track = (target, value) => {
-  /** @type {Map} */
   if (active === null) return;
 
   let depsMapLocal = new Map();

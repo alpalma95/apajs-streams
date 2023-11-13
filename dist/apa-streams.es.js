@@ -1,14 +1,14 @@
-let n = null, s = /* @__PURE__ */ new WeakMap(), g = (e) => {
-  n = e, e(), n = null;
-}, c = (e, r) => {
-  if (n === null)
+let o = null, f = /* @__PURE__ */ new WeakMap(), M = (e) => {
+  o = e, e(), o = null;
+}, l = (e, r) => {
+  if (o === null)
     return;
   let t = /* @__PURE__ */ new Map(), p = /* @__PURE__ */ new Set();
-  s.has(e) ? (t = s.get(e), p = t.get(r)) : (s.set(e, t), t = s.get(e), t.set(r, p), p = t.get(r)), p.add(n);
-}, f = (e, r) => {
-  if (!s.get(e))
+  f.has(e) ? (t = f.get(e), p = t.get(r)) : (f.set(e, t), t = f.get(e), t.set(r, p), p = t.get(r)), p.add(o);
+}, n = (e, r) => {
+  if (!f.get(e))
     return;
-  s.get(e).get(r).forEach((l) => l());
+  f.get(e).get(r).forEach((s) => s());
 }, d = (e) => {
   let r = typeof e == "object" ? Object.fromEntries(
     Object.entries(e).map(([t, p]) => [
@@ -17,15 +17,15 @@ let n = null, s = /* @__PURE__ */ new WeakMap(), g = (e) => {
     ])
   ) : typeof e == "function" ? { val: e() } : { val: e };
   return new Proxy(r, {
-    get(t, p, l) {
-      return c(t, p), Reflect.get(t, p, l);
+    get(t, p, s) {
+      return l(t, p), Reflect.get(t, p, s);
     },
-    set(t, p, l, o) {
-      return Reflect.set(t, p, l, o), f(t, p), !0;
+    set(t, p, s, c) {
+      return t[p] !== s && (Reflect.set(t, p, s, c), n(t, p)), !0;
     }
   });
 };
 export {
-  g as derive,
+  M as derive,
   d as stream
 };

@@ -6,9 +6,12 @@ export default defineConfig({
   },
   build: {
     lib: {
-      entry: "src/index.js",
+      entry: "src/stream.js",
       name: "@apajs/streams",
       fileName: (format) => `apa-streams.${format}.js`,
     },
+  },
+  test: {
+    globals: true,
   },
 });
