@@ -35,18 +35,29 @@ let trigger = (target, value) => {
   deps.forEach((cb) => cb());
 };
 
+let getInitialValue = (initialVal) => {
+  let returnMap = {
+    object: () => {
+      return Object.fromEntries(
+        Object.entries(initialVal).map(([k, v]) => [
+          k,
+          typeof v == "object" ? stream(v) : v,
+        ])
+      );
+    },
+    function: () => {
+      let test = stream(1);
+      derive(() => (test.val = initialVal()));
+      return test;
+    },
+  };
+  return returnMap[typeof initialVal]
+    ? returnMap[typeof initialVal]()
+    : { val: initialVal };
+};
+
 export let stream = (initialVal) => {
-  let base =
-    typeof initialVal === "object"
-      ? Object.fromEntries(
-          Object.entries(initialVal).map(([k, v]) => [
-            k,
-            typeof v == "object" ? stream(v) : v,
-          ])
-        )
-      : typeof initialVal === "function"
-      ? { val: initialVal() }
-      : { val: initialVal };
+  let base = getInitialValue(initialVal);
   return new Proxy(base, {
     get(target, value, receiver) {
       track(target, value);
