@@ -77,5 +77,105 @@ describe("Object-based streams trigger side efects", () => {
   });
 });
 
-// when accessing >2 streams in a derive, effect should be trigger when any of the values change
-// for instance () => a.val, b.val, c.val is triggered when a, b, or c changes
+describe("Callback should not be triggered if new value is same as old value", () => {
+  let c = new MockConsole();
+
+  beforeEach(() => {
+    c.logs = [];
+  });
+
+  it("should log once", () => {
+    const count = stream(0);
+    derive(() => c.log(count.val));
+    count.val = 0;
+    expect(c.logs.length).toEqual(1);
+  });
+
+  it("should log once", () => {
+    const user = stream({ username: "jon" });
+    derive(() => c.log(user.username));
+    user.username = "jon";
+    expect(c.logs.length).toEqual(1);
+  });
+});
+
+describe("Callback should be called whenever any of the dependencies change", () => {
+  let c = new MockConsole();
+
+  beforeEach(() => {
+    c.logs = [];
+  });
+
+  it("should return the sum of initial values", () => {
+    const num1 = stream(1);
+    const num2 = stream(2);
+    expect(num1.val + num2.val).toEqual(3);
+  });
+
+  it("should log three times", () => {
+    const num1 = stream(1);
+    const num2 = stream(2);
+
+    derive(() => {
+      c.log(`num1 + num2 = ${num1.val + num2.val}`);
+    });
+    num1.val = 2;
+    num2.val = 3;
+
+    console.log(c.logs);
+    expect(c.logs.length).toEqual(3);
+  });
+
+  it("should log three times", () => {
+    const user = stream({ username: "jane" });
+    const user2 = stream({ username: "jon" });
+
+    derive(() =>
+      c.log(`Users in database: ${user.username} and ${user2.username}`)
+    );
+    user.username = "al";
+    user2.username = "ro";
+
+    expect(c.logs.length).toEqual(3);
+  });
+});
+
+describe("Computed values work", () => {
+  const count = stream(1);
+  const double = stream(() => count.val * 2);
+
+  it("should return double of initial value", () => {
+    expect(double.val).toEqual(2);
+  });
+
+  it("should change when initial value changes", () => {
+    count.val = 4;
+    expect(double.val).toEqual(8);
+  });
+
+  const num1 = stream(2);
+  const num2 = stream(1);
+  const num1PlusNum2 = stream(() => num1.val + num2.val);
+
+  it("should compute values coming from more than one stream", () => {
+    expect(num1PlusNum2.val).toEqual(3);
+  });
+
+  it("should update when any of initial values change", () => {
+    num1.val++;
+    expect(num1PlusNum2.val).toEqual(4);
+    num2.val++;
+    expect(num1PlusNum2.val).toEqual(5);
+  });
+
+  it("should trigger side effects", () => {
+    let nonReactive;
+
+    derive(() => (nonReactive = num1PlusNum2.val));
+    expect(nonReactive).toEqual(5);
+    num1.val++;
+    expect(nonReactive).toEqual(6);
+    num2.val++;
+    expect(nonReactive).toEqual(7);
+  });
+});
