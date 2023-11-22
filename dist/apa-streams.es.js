@@ -1,40 +1,51 @@
-let l = null, s = /* @__PURE__ */ new WeakMap(), c = (t) => {
-  l = t, t(), l = null;
-}, u = (t, p) => {
-  if (l === null)
+let s = null, o = /* @__PURE__ */ new WeakMap();
+class u {
+  constructor(r) {
+    this.cb = r, this._set = /* @__PURE__ */ new Set();
+  }
+  unhook() {
+    this._set.forEach((r) => r.delete(this));
+  }
+}
+let f = (e) => {
+  s = new u(e), s.cb();
+  let r = s;
+  return s = null, r;
+}, h = (e, r) => {
+  if (s === null)
     return;
-  let e = /* @__PURE__ */ new Map(), r = /* @__PURE__ */ new Set();
-  s.has(t) ? (e = s.get(t), r = e.get(p)) : (s.set(t, e), e = s.get(t), e.set(p, r), r = e.get(p)), r.add(l);
-}, d = (t, p) => {
-  if (!s.get(t))
+  let t;
+  o.has(e) ? t = o.get(e).get(r) : o.set(e, /* @__PURE__ */ new Map([[r, t = /* @__PURE__ */ new Set()]])), s._set.add(t), t.add(s);
+}, d = (e, r) => {
+  if (!o.get(e))
     return;
-  s.get(t).get(p).forEach((n) => n());
-}, M = (t) => {
-  let p = {
+  o.get(e).get(r).forEach(({ cb: n }) => n());
+}, b = (e) => {
+  let r = {
     object: () => Object.fromEntries(
-      Object.entries(t).map(([e, r]) => [
-        e,
-        typeof r == "object" || typeof r == "function" ? o(r) : r
+      Object.entries(e).map(([t, n]) => [
+        t,
+        typeof n == "object" || typeof n == "function" ? p(n) : n
       ])
     ),
     function: () => {
-      let e = o(1);
-      return c(() => e.val = t()), e;
+      let t = p(1);
+      return f(() => t.val = e()), t;
     }
   };
-  return p[typeof t] ? p[typeof t]() : { val: t };
-}, o = (t) => {
-  let p = M(t);
-  return new Proxy(p, {
-    get(e, r, n) {
-      return u(e, r), Reflect.get(e, r, n);
+  return r[typeof e] ? r[typeof e]() : { val: e };
+}, p = (e) => {
+  let r = b(e);
+  return new Proxy(r, {
+    get(t, n, c) {
+      return h(t, n), Reflect.get(t, n, c);
     },
-    set(e, r, n, f) {
-      return e[r] !== n && (Reflect.set(e, r, n, f), d(e, r)), !0;
+    set(t, n, c, l) {
+      return t[n] !== c && (Reflect.set(t, n, c, l), d(t, n)), !0;
     }
   });
 };
 export {
-  c as hook,
-  o as stream
+  f as hook,
+  p as stream
 };
