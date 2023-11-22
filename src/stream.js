@@ -1,10 +1,22 @@
 let active = null;
 let targetMap = new WeakMap();
 
+class Dep {
+  constructor(cb) {
+    this.cb = cb;
+    this._set = new Set();
+  }
+  unhook() {
+    this._set.forEach((s) => s.delete(this));
+  }
+}
+
 export let hook = (cb) => {
-  active = cb;
-  cb();
+  active = new Dep(cb);
+  active.cb();
+  let temp = active;
   active = null;
+  return temp;
 };
 let track = (target, value) => {
   if (active === null) return;
@@ -14,12 +26,13 @@ let track = (target, value) => {
     ? (deps = targetMap.get(target).get(value))
     : targetMap.set(target, new Map([[value, (deps = new Set())]]));
 
+  active._set.add(deps);
   deps.add(active);
 };
 let trigger = (target, value) => {
   if (!targetMap.get(target)) return;
   let deps = targetMap.get(target).get(value);
-  deps.forEach((cb) => cb());
+  deps.forEach(({ cb }) => cb());
 };
 
 let getInitialValue = (initialVal) => {

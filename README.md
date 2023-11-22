@@ -2,7 +2,9 @@
 
 Lightweight and minimalistic solution to reactivity. It was originally intended to be used together with [ApăJS](https://github.com/alpalma95/apajs), but you can always use it as a standalone solution.
 
-## Reactive objects
+## Usage
+
+### Reactive objects
 
 Reactive objects can be either primitives or object references. Simply, pass the value you want to make reactive to the `stream()` function.
 If a primitive has been provided, its value can be accessed or set via `myVar.val`. In the case of objects, we can simply access and set the properties as in a plain object (eg: `myObject.count`):
@@ -23,7 +25,7 @@ user.username = "Jane";
 console.log(user.username); // 'Jane'
 ```
 
-## Reacting to changes with `hook()`
+### Reacting to changes with `hook()`
 
 The function `hook` accepts a callback that will be executed whenever any of the dependencies change.
 
@@ -62,7 +64,7 @@ user.username = "Jane";
 // Automatically logs 'Jane'
 ```
 
-## Computed values:
+### Computed values:
 
 The simplest way to derive a computed value is by passing a callback to the `stream` function. Under the hood, it'll be automatically called into a derive which will set the value any time any of the dependencies change.
 
@@ -96,7 +98,32 @@ currentYear.val++; // logs 29
 birthYear++; // doesn't log anything because it's not a reactive variable
 ```
 
+### Clearing callbacks
+
+Typically, callbacks should be cleared automatically by the garbage collector when the object doesn't exist anymore. However, there are a few situations where you may want to remove the effect from the dependencies manually:
+
+Streams can share state across several files (including components, if you'd like to use it in a frontend application!). If you're creating streams inside the component, these streams should be removed automatically with all their dependencies when the component enters the destroy phase. However, if the stream has been created outside of the component, the callback will remain in the dependencies of the stream even if you have destroyed the component.
+
+Whether it is because of the situation above, or because you simply want to stop a certain callback from happening anymore, know that hooks return the dependency itself. The dependencies (`Dep`s, in the codebase) are simply a class with the callback, a set containing the set(s) where it has been included and an `unhook` method, which will remove the dependency from the set(s). Example usage:
+
+```javascript
+const count = stream(0);
+const effect = hook(() => console.log(count.val)); // logs 0 as normally
+count.val++; // logs 1
+effect.unhook();
+count.val++; // no more logging!
+```
+
+> Notice it'll work exactly the same even if we have more than one dependency in the callback
+
+## Credits
+
+The following projects and talks served as a profound inspiration to get Streams up and running:
+
+- [Vue reactivity](https://github.com/vuejs/core/tree/main/packages/reactivity), whose code I tried to understand but I'm not that smart/patient yet hehe.
+- [Marc Backes' talk](https://www.youtube.com/watch?v=zZ99CTme5yM&ab_channel=VueGermany) on Vue Conf 2022, which triggered the spark of my curiosity. It also showed me the "capture active strategy" (I'm sure it does have a name, if anyone can share it'd be much appreciated).
+- [VanJS](https://github.com/vanjs-org/van), whose minimalistic design and code-saving strategy inspired several decisions on the Streams syntax (both API and codebase).
+
 ## Upcoming
 
-- [ ] Cleanup unused effects
 - [ ] Type definitions
