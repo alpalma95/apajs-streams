@@ -8,30 +8,17 @@ export let hook = (cb) => {
 };
 let track = (target, value) => {
   if (active === null) return;
+  let deps;
 
-  let depsMapLocal = new Map();
-  let depsLocal = new Set();
+  targetMap.has(target)
+    ? (deps = targetMap.get(target).get(value))
+    : targetMap.set(target, new Map([[value, (deps = new Set())]]));
 
-  if (targetMap.has(target)) {
-    // get depsMap from targetMap
-    depsMapLocal = targetMap.get(target);
-    depsLocal = depsMapLocal.get(value);
-  } else {
-    // set new entry in targetMap
-    targetMap.set(target, depsMapLocal);
-    depsMapLocal = targetMap.get(target);
-    depsMapLocal.set(value, depsLocal);
-    depsLocal = depsMapLocal.get(value);
-  }
-  // get deps from depsMap
-
-  // add effect to deps <- depsMap <- targetMap
-  depsLocal.add(active);
+  deps.add(active);
 };
 let trigger = (target, value) => {
   if (!targetMap.get(target)) return;
-  let depsMap = targetMap.get(target);
-  let deps = depsMap.get(value);
+  let deps = targetMap.get(target).get(value);
   deps.forEach((cb) => cb());
 };
 
@@ -46,9 +33,9 @@ let getInitialValue = (initialVal) => {
       );
     },
     function: () => {
-      let test = stream(1);
-      hook(() => (test.val = initialVal()));
-      return test;
+      let temp = stream(1);
+      hook(() => (temp.val = initialVal()));
+      return temp;
     },
   };
   return returnMap[typeof initialVal]
