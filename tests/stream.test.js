@@ -1,4 +1,4 @@
-import { stream, derive } from "../src/stream";
+import { stream, hook } from "../src/stream";
 import { MockConsole } from "./utils";
 
 describe("Primitive-based streams returns correct value", () => {
@@ -42,13 +42,13 @@ describe("Primitive-based streams trigger side efects", () => {
 
   it("should log once when value isn't mutated", () => {
     const count = stream(0);
-    derive(() => c.log(count.val));
+    hook(() => c.log(count.val));
     expect(c.logs.length).toEqual(1);
   });
 
   it("should log twice and printed value should be new one", () => {
     const count = stream(0);
-    derive(() => c.log(count.val));
+    hook(() => c.log(count.val));
     count.val = 1;
     expect(c.logs.length).toEqual(2);
     expect(c.logs.at(-1)).toEqual(1);
@@ -64,13 +64,13 @@ describe("Object-based streams trigger side efects", () => {
 
   it("should log once when value isn't mutated", () => {
     const user = stream({ username: "Jon" });
-    derive(() => c.log(user.username));
+    hook(() => c.log(user.username));
     expect(c.logs.length).toEqual(1);
   });
 
   it("should log twice and printed value should be new one", () => {
     const user = stream({ username: "Jon" });
-    derive(() => c.log(user.username));
+    hook(() => c.log(user.username));
     user.username = "Jane";
     expect(c.logs.length).toEqual(2);
     expect(c.logs.at(-1)).toEqual("Jane");
@@ -86,14 +86,14 @@ describe("Callback should not be triggered if new value is same as old value", (
 
   it("should log once", () => {
     const count = stream(0);
-    derive(() => c.log(count.val));
+    hook(() => c.log(count.val));
     count.val = 0;
     expect(c.logs.length).toEqual(1);
   });
 
   it("should log once", () => {
     const user = stream({ username: "jon" });
-    derive(() => c.log(user.username));
+    hook(() => c.log(user.username));
     user.username = "jon";
     expect(c.logs.length).toEqual(1);
   });
@@ -116,7 +116,7 @@ describe("Callback should be called whenever any of the dependencies change", ()
     const num1 = stream(1);
     const num2 = stream(2);
 
-    derive(() => {
+    hook(() => {
       c.log(`num1 + num2 = ${num1.val + num2.val}`);
     });
     num1.val = 2;
@@ -130,7 +130,7 @@ describe("Callback should be called whenever any of the dependencies change", ()
     const user = stream({ username: "jane" });
     const user2 = stream({ username: "jon" });
 
-    derive(() =>
+    hook(() =>
       c.log(`Users in database: ${user.username} and ${user2.username}`)
     );
     user.username = "al";
@@ -141,6 +141,12 @@ describe("Callback should be called whenever any of the dependencies change", ()
 });
 
 describe("Computed values work", () => {
+  let c = new MockConsole();
+
+  beforeEach(() => {
+    c.logs = [];
+  });
+
   const count = stream(1);
   const double = stream(() => count.val * 2);
 
@@ -171,11 +177,35 @@ describe("Computed values work", () => {
   it("should trigger side effects", () => {
     let nonReactive;
 
-    derive(() => (nonReactive = num1PlusNum2.val));
+    hook(() => (nonReactive = num1PlusNum2.val));
     expect(nonReactive).toEqual(5);
     num1.val++;
     expect(nonReactive).toEqual(6);
     num2.val++;
     expect(nonReactive).toEqual(7);
+  });
+
+  let birthYear = 1995;
+  let currentYear = stream(2023);
+
+  let user = stream({
+    name: "Jon",
+    age: () => currentYear.val - birthYear,
+  });
+
+  it("should work inside objects", () => {
+    expect(user.age.val).toEqual(28);
+  });
+
+  it("should be reactive when inside an object", () => {
+    currentYear.val++;
+    expect(user.age.val).toEqual(29);
+  });
+
+  it("should trigger side effects when inside an object", () => {
+    hook(() => c.log(user.age.val));
+    currentYear.val++;
+
+    expect(c.logs.length).toEqual(2);
   });
 });

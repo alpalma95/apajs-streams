@@ -8,17 +8,25 @@
   <body>
     <h1>Counter: <span>0</span></h1>
     <script type="module">
-      import { stream, derive } from "./src/stream.js";
+      import { stream, hook } from "./src/stream.js";
 
       const count = stream(1);
       const count2 = stream(2);
       let test = stream(() => count.val + count2.val);
       let b;
-      derive(() => {
+      hook(() => {
         b = test.val;
         console.log(`computed value stored in outside variable is ${b}`);
       });
 
+      let testObject = stream({
+        username: "jon",
+        age: () => count.val + count2.val,
+      });
+
+      hook(() => console.log(testObject.age.val));
+
+      console.log(testObject.age);
       setTimeout(() => {
         console.log("modifying count val");
         count.val++;
@@ -26,7 +34,15 @@
       setTimeout(() => {
         console.log("modifying count2 val");
         count2.val++;
+      }, 4000);
+      setTimeout(() => {
+        console.log("Modi testobject val directly");
+        testObject.age.val = 89;
       }, 6000);
+      setTimeout(() => {
+        console.log("modifying count2 val again");
+        count2.val++;
+      }, 8000);
     </script>
   </body>
 </html>

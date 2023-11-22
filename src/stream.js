@@ -1,7 +1,7 @@
 let active = null;
 let targetMap = new WeakMap();
 
-export let derive = (cb) => {
+export let hook = (cb) => {
   active = cb;
   cb();
   active = null;
@@ -41,13 +41,13 @@ let getInitialValue = (initialVal) => {
       return Object.fromEntries(
         Object.entries(initialVal).map(([k, v]) => [
           k,
-          typeof v == "object" ? stream(v) : v,
+          typeof v == "object" || typeof v == "function" ? stream(v) : v,
         ])
       );
     },
     function: () => {
       let test = stream(1);
-      derive(() => (test.val = initialVal()));
+      hook(() => (test.val = initialVal()));
       return test;
     },
   };
