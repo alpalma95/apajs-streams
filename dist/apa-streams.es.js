@@ -1,51 +1,50 @@
-let s = null, o = /* @__PURE__ */ new WeakMap();
+let n = null, o = /* @__PURE__ */ new WeakMap();
 class u {
-  constructor(r) {
-    this.cb = r, this._set = /* @__PURE__ */ new Set();
+  constructor(t) {
+    this.cb = t, this._set = /* @__PURE__ */ new Set();
   }
   unhook() {
-    this._set.forEach((r) => r.delete(this));
+    this._set.forEach((t) => t.delete(this));
   }
 }
-let f = (e) => {
-  s = new u(e), s.cb();
-  let r = s;
-  return s = null, r;
-}, h = (e, r) => {
-  if (s === null)
+let l = (e) => {
+  n = new u(e), n.cb();
+  let t = n;
+  return n = null, t;
+}, h = (e, t) => {
+  if (n === null)
     return;
-  let t;
-  o.has(e) ? t = o.get(e).get(r) : o.set(e, /* @__PURE__ */ new Map([[r, t = /* @__PURE__ */ new Set()]])), s._set.add(t), t.add(s);
-}, d = (e, r) => {
+  let r;
+  o.has(e) ? r = o.get(e).get(t) : o.set(e, /* @__PURE__ */ new Map([[t, r = /* @__PURE__ */ new Set()]])), n._set.add(r), r.add(n);
+}, d = (e, t) => {
   if (!o.get(e))
     return;
-  o.get(e).get(r).forEach(({ cb: n }) => n());
-}, b = (e) => {
-  let r = {
-    object: () => Object.fromEntries(
-      Object.entries(e).map(([t, n]) => [
+  o.get(e).get(t).forEach(({ cb: s }) => s());
+}, y = (e) => {
+  if (Array.isArray(e) || typeof e != "function" && typeof e != "object")
+    return { val: e };
+  if (typeof e == "function") {
+    let t = f(1);
+    return l(() => t.val = e()), t;
+  } else
+    return Object.fromEntries(
+      Object.entries(e).map(([t, r]) => [
         t,
-        typeof n == "object" || typeof n == "function" ? p(n) : n
+        typeof r == "object" || typeof r == "function" ? f(r) : r
       ])
-    ),
-    function: () => {
-      let t = p(1);
-      return f(() => t.val = e()), t;
-    }
-  };
-  return r[typeof e] ? r[typeof e]() : { val: e };
-}, p = (e) => {
-  let r = b(e);
-  return new Proxy(r, {
-    get(t, n, c) {
-      return h(t, n), Reflect.get(t, n, c);
+    );
+}, f = (e) => {
+  let t = y(e);
+  return new Proxy(t, {
+    get(r, s, c) {
+      return h(r, s), Reflect.get(r, s, c);
     },
-    set(t, n, c, l) {
-      return t[n] !== c && (Reflect.set(t, n, c, l), d(t, n)), !0;
+    set(r, s, c, p) {
+      return r[s] !== c && (Reflect.set(r, s, c, p), d(r, s)), !0;
     }
   });
 };
 export {
-  f as hook,
-  p as stream
+  l as hook,
+  f as stream
 };

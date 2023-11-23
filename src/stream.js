@@ -36,24 +36,23 @@ let trigger = (target, value) => {
 };
 
 let getInitialValue = (initialVal) => {
-  let returnMap = {
-    object: () => {
-      return Object.fromEntries(
-        Object.entries(initialVal).map(([k, v]) => [
-          k,
-          typeof v == "object" || typeof v == "function" ? stream(v) : v,
-        ])
-      );
-    },
-    function: () => {
-      let temp = stream(1);
-      hook(() => (temp.val = initialVal()));
-      return temp;
-    },
-  };
-  return returnMap[typeof initialVal]
-    ? returnMap[typeof initialVal]()
-    : { val: initialVal };
+  if (
+    Array.isArray(initialVal) ||
+    (typeof initialVal !== "function" && typeof initialVal !== "object")
+  ) {
+    return { val: initialVal };
+  } else if (typeof initialVal == "function") {
+    let temp = stream(1);
+    hook(() => (temp.val = initialVal()));
+    return temp;
+  } else {
+    return Object.fromEntries(
+      Object.entries(initialVal).map(([k, v]) => [
+        k,
+        typeof v == "object" || typeof v == "function" ? stream(v) : v,
+      ])
+    );
+  }
 };
 
 export let stream = (initialVal) => {

@@ -10,14 +10,8 @@
     <script type="module">
       import { stream, hook } from "./src/stream.js";
 
-      let count = stream(0);
-      let count2 = stream(1);
-      let effect = hook(() => console.log(count.val + count2.val));
-      count.val++;
-      console.log(effect);
-      effect.unhook();
-      count.val++;
-      count2.val++;
+      let test = stream([1, 2, 3]);
+      hook(() => console.log(test.val));
     </script>
   </body>
 </html>

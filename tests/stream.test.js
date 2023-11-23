@@ -209,3 +209,46 @@ describe("Computed values work", () => {
     expect(c.logs.length).toEqual(2);
   });
 });
+
+describe("Effects should be cleared on demand", () => {
+  let c = new MockConsole();
+  beforeEach(() => {
+    c.logs = [];
+  });
+
+  it("should clear the effect when a single dependency is registered", () => {
+    let count = stream(0);
+    let effect = hook(() => c.log(count.val));
+    count.val++;
+    effect.unhook();
+    count.val++;
+    expect(c.logs.length).toEqual(2);
+    expect(count.val).toEqual(2);
+  });
+
+  it("should clear the effects when more than one dependency is used", () => {
+    let count = stream(0);
+    let count2 = stream(1);
+    let effect = hook(() => c.log(count.val + count2.val));
+    count.val++;
+    count2.val++;
+    effect.unhook();
+    count.val++;
+    count2.val++;
+    expect(c.logs.length).toEqual(3);
+  });
+
+  it("should clear the effects of computed values", () => {
+    let count = stream(0);
+    let count2 = stream(1);
+    let computed = stream(() => count.val + count2.val);
+    let effect = hook(() => c.log(computed.val));
+    count.val++;
+    count2.val++;
+    effect.unhook();
+    count.val++;
+    count2.val++;
+    expect(c.logs.length).toEqual(3);
+    expect(computed.val).toEqual(5);
+  });
+});
