@@ -1,6 +1,6 @@
 {
-  "name": "@apajs/streams",
-  "version": "0.0.1",
+  "name": "apajs-streams",
+  "version": "1.0.1",
   "description": "Minimalistic and lightweight reactive objects",
   "main": "/src/stream.js",
   "type": "module",
@@ -10,6 +10,22 @@
     "preview": "vite preview",
     "test": "vitest run"
   },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alpalma95/apajs.git"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/apa-streams.es.min.js",
+      "require": "./dist/apa-strams.umd.js"
+    }
+  },
+  "unpkg": "./dist/apa-streams.es.min.js",
+  "module": "./dist/apa-streams.es.js",
   "keywords": [
     "reactivity"
   ],

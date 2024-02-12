@@ -4,6 +4,8 @@ Lightweight and minimalistic solution to reactivity. It was originally intended 
 
 ## Usage
 
+You can `npm i apajs-streams` or import the functions from `https://esm.sh/apajs-streams@1.0.0`.
+
 ### Reactive objects
 
 Reactive objects can be either primitives or object references. Simply, pass the value you want to make reactive to the `stream()` function.
