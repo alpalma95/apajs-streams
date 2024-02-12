@@ -4,7 +4,7 @@ Lightweight and minimalistic solution to reactivity. It was originally intended 
 
 ## Usage
 
-You can `npm i apajs-streams` or import the functions from `https://esm.sh/apajs-streams@1.0.0`.
+You can `npm i apajs-streams` or import the functions from `https://esm.sh/apajs-streams@1.0.1`.
 
 ### Reactive objects
 
