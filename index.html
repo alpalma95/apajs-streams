@@ -9,9 +9,24 @@
     <h1>Counter: <span>0</span></h1>
     <script type="module">
       import { stream, hook } from "./src/stream.js";
+      const person = stream({
+      name: 'Jon',
+      surname: 'Doe'
+    })
+    let err = null;
+    
+    try {
+      hook( () => { 
+        console.log(person.name)
+        console.log(person.surname)
+      })
+    } catch (e) {
+      console.log(e)
+      err = true
+    }
 
-      let test = stream([1, 2, 3]);
-      hook(() => console.log(test.val));
+    person.name = "Test name"
+    person.surname = "Test surname"
     </script>
   </body>
 </html>

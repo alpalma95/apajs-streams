@@ -252,3 +252,45 @@ describe("Effects should be cleared on demand", () => {
     expect(computed.val).toEqual(5);
   });
 });
+
+describe('We should be able to use properties of the same reactive object in the same effect', () => {
+  const person = stream({
+    name: 'Jon',
+    surname: 'Doe',
+    username: 'jondoe'
+  })
+
+  it('shouldn\'t give any error', () => {
+    let err = null;
+
+    try {
+      let effect = hook( () => { 
+        console.log(person.name)
+        console.log(person.surname)
+        console.log(person.username)
+
+      })
+      effect.unhook()
+    } catch (_e) {
+      err = true
+    }
+    expect(err).toBe(null)
+  })
+
+  it('should trigger the effect whenever any of the values change', () => {
+    let timesTriggered = 0
+
+    let effect = hook( () => {
+      console.log(person.name)
+      console.log(person.surname)
+      console.log(person.username)
+      timesTriggered++
+    })
+
+    person.name = 'Test Name'
+    person.surname = "Test surname"
+    person.surname = "Test username"
+    expect(timesTriggered).toBe(4)
+    effect.unhook()
+  })
+})

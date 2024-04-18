@@ -1,4 +1,4 @@
-let n = null, o = /* @__PURE__ */ new WeakMap();
+let n = null, c = /* @__PURE__ */ new WeakMap();
 class u {
   constructor(t) {
     this.cb = t, this._set = /* @__PURE__ */ new Set();
@@ -7,20 +7,24 @@ class u {
     this._set.forEach((t) => t.delete(this));
   }
 }
+const h = (e, t, s) => {
+  let r;
+  return e.has(t) && e.get(t).has(s) ? r = e.get(t).get(s) : e.has(t) && !e.get(t).has(s) ? e.get(t).set(s, r = /* @__PURE__ */ new Set()) : e.set(t, /* @__PURE__ */ new Map([[s, r = /* @__PURE__ */ new Set()]])), r;
+};
 let l = (e) => {
   n = new u(e), n.cb();
   let t = n;
   return n = null, t;
-}, h = (e, t) => {
+}, d = (e, t) => {
   if (n === null)
     return;
-  let r;
-  o.has(e) ? r = o.get(e).get(t) : o.set(e, /* @__PURE__ */ new Map([[t, r = /* @__PURE__ */ new Set()]])), n._set.add(r), r.add(n);
-}, d = (e, t) => {
-  if (!o.get(e))
+  let s = h(c, e, t);
+  n._set.add(s), s.add(n);
+}, y = (e, t) => {
+  if (!c.get(e))
     return;
-  o.get(e).get(t).forEach(({ cb: s }) => s());
-}, y = (e) => {
+  c.get(e).get(t).forEach(({ cb: r }) => r());
+}, b = (e) => {
   if (Array.isArray(e) || typeof e != "function" && typeof e != "object")
     return { val: e };
   if (typeof e == "function") {
@@ -28,19 +32,19 @@ let l = (e) => {
     return l(() => t.val = e()), t;
   } else
     return Object.fromEntries(
-      Object.entries(e).map(([t, r]) => [
+      Object.entries(e).map(([t, s]) => [
         t,
-        typeof r == "object" || typeof r == "function" ? f(r) : r
+        typeof s == "object" || typeof s == "function" ? f(s) : s
       ])
     );
 }, f = (e) => {
-  let t = y(e);
+  let t = b(e);
   return new Proxy(t, {
-    get(r, s, c) {
-      return h(r, s), Reflect.get(r, s, c);
+    get(s, r, o) {
+      return d(s, r), Reflect.get(s, r, o);
     },
-    set(r, s, c, p) {
-      return r[s] !== c && (Reflect.set(r, s, c, p), d(r, s)), !0;
+    set(s, r, o, p) {
+      return s[r] !== o && (Reflect.set(s, r, o, p), y(s, r)), !0;
     }
   });
 };

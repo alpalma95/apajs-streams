@@ -11,6 +11,23 @@ class Dep {
   }
 }
 
+/**
+ * @param {WeakMap} tm
+ * @param {Map} target
+ * @param {String} value
+ */
+const resolveDeps = (tm, target, value) => {
+  /** @type {Set<Dep>} */
+  let deps;
+  tm.has(target) && tm.get(target).has(value)
+    ? (deps = tm.get(target).get(value))
+    : tm.has(target) && !tm.get(target).has(value)
+    ? tm.get(target).set(value, (deps = new Set()))
+    : tm.set(target, new Map([[value, (deps = new Set())]]));
+
+  return deps;
+};
+
 export let hook = (cb) => {
   active = new Dep(cb);
   active.cb();
@@ -20,11 +37,7 @@ export let hook = (cb) => {
 };
 let track = (target, value) => {
   if (active === null) return;
-  let deps;
-
-  targetMap.has(target)
-    ? (deps = targetMap.get(target).get(value))
-    : targetMap.set(target, new Map([[value, (deps = new Set())]]));
+  let deps = resolveDeps(targetMap, target, value);
 
   active._set.add(deps);
   deps.add(active);
