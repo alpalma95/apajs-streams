@@ -7,8 +7,8 @@ export default defineConfig({
   build: {
     lib: {
       entry: "src/stream.js",
-      name: "@apajs/streams",
-      fileName: (format) => `apa-streams.${format}.js`,
+      name: "@reactiv/streams",
+      fileName: (format) => `streams.${format}.js`,
     },
   },
   test: {

@@ -21,8 +21,8 @@ const config = {
   },
   module: true,
   sourceMap: {
-    filename: "apa-streams.min.js",
-    url: "apa-streams.min.js.map",
+    filename: "streams.min.js",
+    url: "streams.min.js.map",
   },
   output: {
     comments: false,
@@ -30,12 +30,12 @@ const config = {
 };
 
 const doMinify = async () => {
-  const code = fs.readFileSync("./dist/apa-streams.es.js", "utf8");
+  const code = fs.readFileSync("./dist/streams.es.js", "utf8");
 
   const minified = await minify(code, config);
 
-  fs.writeFileSync("./dist/apa-streams.es.min.js", minified.code);
+  fs.writeFileSync("./dist/streams.es.min.js", minified.code);
 
-  fs.writeFileSync("./dist/apa-streams.min.js.map", minified.map);
+  fs.writeFileSync("./dist/streams.min.js.map", minified.map);
 };
 doMinify();

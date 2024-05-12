@@ -1,12 +1,12 @@
 {
-  "name": "apajs-streams",
-  "version": "1.0.2",
+  "name": "@reactiv/streams",
+  "version": "1.0.0",
   "description": "Minimalistic and lightweight reactive objects",
   "main": "/src/stream.js",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && node minify.js && gzip -c dist/apa-streams.es.min.js > dist/apa-streams.es.min.gz && cp ./src/main.d.ts ./dist/apa-streams.es.d.ts && cp ./src/main.d.ts ./dist/apa-streams.es.min.d.ts",
+    "build": "vite build && node minify.js && gzip -c dist/streams.es.min.js > dist/streams.es.min.gz && cp ./src/main.d.ts ./dist/streams.es.d.ts && cp ./src/main.d.ts ./dist/streams.es.min.d.ts",
     "preview": "vite preview",
     "test": "vitest run"
   },
@@ -20,12 +20,12 @@
   },
   "exports": {
     ".": {
-      "import": "./dist/apa-streams.es.min.js",
-      "require": "./dist/apa-strams.umd.js"
+      "import": "./dist/streams.es.min.js",
+      "require": "./dist/strams.umd.js"
     }
   },
-  "unpkg": "./dist/apa-streams.es.min.js",
-  "module": "./dist/apa-streams.es.js",
+  "unpkg": "./dist/streams.es.min.js",
+  "module": "./dist/streams.es.js",
   "keywords": [
     "reactivity"
   ],
