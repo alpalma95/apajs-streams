@@ -16,7 +16,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/alpalma95/apajs.git"
+    "url": "git+https://github.com/alpalma95/streams.git"
   },
   "exports": {
     ".": {
