@@ -1,12 +1,12 @@
 {
   "name": "@reactivjs/streams",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Minimalistic and lightweight reactive objects",
   "main": "/src/stream.js",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && node minify.js && gzip -c dist/streams.es.min.js > dist/streams.es.min.gz && cp ./src/main.d.ts ./dist/streams.es.d.ts && cp ./src/main.d.ts ./dist/streams.es.min.d.ts",
+    "build": "vite build && node minify.js && gzip -c dist/streams.es.min.js > dist/streams.es.min.gz && cp ./src/stream.d.ts ./dist/streams.d.ts && cp ./src/stream.d.ts ./dist/streams.es.min.d.ts",
     "preview": "vite preview",
     "test": "vitest run"
   },
@@ -18,6 +18,7 @@
     "type": "git",
     "url": "git+https://github.com/alpalma95/streams.git"
   },
+  "types": "./dist/streams.d.ts",
   "exports": {
     ".": {
       "import": "./dist/streams.es.min.js",
