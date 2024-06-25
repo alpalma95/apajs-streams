@@ -8,6 +8,6 @@ declare module '@reactivjs/streams' {
    
     const hook: (cb: () => void) => Effect;
    
-    const stream: <T>(initialVal: any) => T & { val: T };
+    const stream: <T>(initialVal: any) => T extends object ? T : { val: T };
 }
 
