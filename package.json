@@ -1,6 +1,6 @@
 {
   "name": "@reactivjs/streams",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "Minimalistic and lightweight reactive objects",
   "main": "/src/stream.js",
   "type": "module",
